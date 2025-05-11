@@ -1,7 +1,10 @@
 [package]
 name = "world-data-types"
+description = "Shared types for world-data."
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+repository = "https://github.com/Zitronenjoghurt/world-data"
 
 [dependencies]
 geo = { version = "0.30.0", features = ["serde", "use-serde"] }

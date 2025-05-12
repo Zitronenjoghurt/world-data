@@ -1,7 +1,5 @@
-use world_data::load_world_data;
-
 fn main() {
-    let world_data = load_world_data();
+    let world_data = world_data::load();
     let de = world_data.countries.get("DE").unwrap();
-    println!("{:?}", de);
+    println!("{:#?}", de);
 }

@@ -1,25 +1,27 @@
-mod geometry;
-
-use std::collections::HashMap;
-use std::path::{Path};
+use crate::geometry::parse_geometry;
+use crate::models::all_countries_entry::AllCountriesEntry;
+use crate::models::countries_extra::CountriesExtra;
 use geojson::GeoJson;
+use std::collections::HashMap;
+use std::path::Path;
 use world_data_types::data::country::Country;
 use world_data_types::data::WorldData;
-use crate::geometry::parse_geometry;
 
-macro_rules! p {
-    ($($tokens: tt)*) => {
-        println!("cargo::warning={}", format!($($tokens)*))
-    }
-}
+mod geometry;
+mod models;
 
 pub fn build_data(data_path: &Path) -> WorldData {
-    let countries_geojson_path = data_path.join("ne_10m_admin_0_countries.geojson");
-    let countries_geojson_string = std::fs::read_to_string(countries_geojson_path).unwrap();
-    let countries_geojson = countries_geojson_string.parse::<GeoJson>().unwrap();
+    let countries_geojson = get_countries_geojson(data_path);
+    let all_countries = get_all_countries_data(data_path);
+    let countries_extra = get_countries_extra_data(data_path);
+
+    let map_a3_to_a2: HashMap<String, String> = all_countries
+        .values()
+        .map(|v| (v.cca3.clone(), v.cca2.clone()))
+        .collect();
 
     let mut world_data = WorldData {
-        countries: HashMap::new()
+        countries: HashMap::new(),
     };
 
     let GeoJson::FeatureCollection(collection) = countries_geojson else {
@@ -39,8 +41,36 @@ pub fn build_data(data_path: &Path) -> WorldData {
             continue;
         };
 
+        let Some(data) = all_countries.get(code).cloned() else {
+            continue;
+        };
+
+        let is_enclave = countries_extra.enclaves.contains(code);
         let polygons = parse_geometry(&geometry);
+
+        let bordering_countries: Vec<String> = data
+            .borders
+            .iter()
+            .map(|c| map_a3_to_a2[c].clone())
+            .collect();
+
         let country = Country {
+            common_name: data.name.common,
+            official_name: data.name.official,
+            region: data.region,
+            subregion: data.subregion,
+            continents: data.continents,
+            bordering_countries,
+            area: data.area as u32,
+            population: data.population,
+            iso_a2: data.cca2,
+            iso_a3: data.cca3,
+            is_enclave,
+            is_landlocked: data.landlocked,
+            is_independent: data.independent,
+            is_un_member: data.un_member,
+            capitals: data.capital,
+            top_level_domains: data.tld,
             polygons,
         };
 
@@ -50,3 +80,23 @@ pub fn build_data(data_path: &Path) -> WorldData {
     world_data
 }
 
+fn get_countries_geojson(data_path: &Path) -> GeoJson {
+    let file_path = data_path.join("ne_10m_admin_0_countries.geojson");
+    let content_string = std::fs::read_to_string(file_path).unwrap();
+    content_string.parse::<GeoJson>().unwrap()
+}
+
+fn get_all_countries_data(data_path: &Path) -> HashMap<String, AllCountriesEntry> {
+    let file_path = data_path.join("all_countries.json");
+    let entries: Vec<AllCountriesEntry> =
+        serde_json::from_reader(std::fs::File::open(file_path).unwrap()).unwrap();
+    entries
+        .into_iter()
+        .map(|entry| (entry.cca2.clone(), entry))
+        .collect()
+}
+
+fn get_countries_extra_data(data_path: &Path) -> CountriesExtra {
+    let file_path = data_path.join("countries_extra.json");
+    serde_json::from_reader(std::fs::File::open(file_path).unwrap()).unwrap()
+}

@@ -1,14 +1,14 @@
+use flate2::write::ZlibEncoder;
+use flate2::Compression;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
-use flate2::Compression;
-use flate2::write::ZlibEncoder;
 use world_data_build::build_data;
 
 fn main() {
     let data_path = PathBuf::from("../data");
     let out_dir = PathBuf::from("../");
-    let dest_path = PathBuf::from(out_dir).join("data.bin");
+    let dest_path = out_dir.join("data.bin");
 
     let data = build_data(&data_path);
     let encoded_data = bincode::serialize(&data).unwrap();

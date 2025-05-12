@@ -71,6 +71,7 @@ pub fn build_data(data_path: &Path) -> WorldData {
             is_un_member: data.un_member,
             capitals: data.capital,
             top_level_domains: data.tld,
+            flag_svg: get_country_flag(data_path, code),
             polygons,
         };
 
@@ -99,4 +100,10 @@ fn get_all_countries_data(data_path: &Path) -> HashMap<String, AllCountriesEntry
 fn get_countries_extra_data(data_path: &Path) -> CountriesExtra {
     let file_path = data_path.join("countries_extra.json");
     serde_json::from_reader(std::fs::File::open(file_path).unwrap()).unwrap()
+}
+
+fn get_country_flag(data_path: &Path, code: &str) -> Vec<u8> {
+    let flags_path = data_path.join("flags");
+    let path = flags_path.join(format!("{}.svg", code.to_lowercase()));
+    std::fs::read(path).unwrap_or_else(|_| panic!("Did not find flag svg for country: {}", code))
 }

@@ -464,7 +464,7 @@ checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
 
 [[package]]
 name = "world-data-build"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "bincode",
  "flate2",
@@ -477,7 +477,7 @@ dependencies = [
 
 [[package]]
 name = "world-data-types"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "geo",
  "serde",

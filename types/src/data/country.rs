@@ -21,5 +21,6 @@ pub struct Country {
     pub is_un_member: bool,
     pub capitals: Vec<String>,
     pub top_level_domains: Vec<String>,
+    pub flag_svg: Vec<u8>,
     pub polygons: Vec<Polygon<f32>>,
 }

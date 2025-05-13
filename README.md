@@ -1,3 +1,5 @@
+[![](https://img.shields.io/crates/v/world-data)](https://crates.io/crates/world-data)
+
 # world-data
 
 A rust crate containing country shapes as polygons, capital city positions and more.

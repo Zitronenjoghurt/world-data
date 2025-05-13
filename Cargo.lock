@@ -401,7 +401,7 @@ checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
 
 [[package]]
 name = "world-data"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "bincode",
  "flate2",
@@ -411,6 +411,8 @@ dependencies = [
 [[package]]
 name = "world-data-types"
 version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e86da373b63ea721ccb86f9ff4caf4430902e990bce6446dad8a0a523a91ee88"
 dependencies = [
  "geo",
  "serde",

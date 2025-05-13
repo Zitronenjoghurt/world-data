@@ -8,7 +8,10 @@ A rust crate containing country shapes as polygons, capital city positions and m
 fn main() {
     let data = world_data::load();
     let country_us = data.countries.get("US").unwrap();
-    println!("{}", country_us.official_name)
+    println!("{}", country_us.official_name);
+
+    let capital_de = data.capitals.get("Berlin").unwrap();
+    println!("{:#?}", capital_de);
 }
 ```
 

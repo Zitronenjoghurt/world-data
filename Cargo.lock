@@ -410,9 +410,7 @@ dependencies = [
 
 [[package]]
 name = "world-data-types"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7d9740d2ce54bf04e4c76fb3cfa262c2696ea624d1ec651cde17f7b1af244a28"
+version = "0.4.0"
 dependencies = [
  "geo",
  "serde",
